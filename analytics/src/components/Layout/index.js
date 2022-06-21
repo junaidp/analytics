@@ -20,12 +20,12 @@ const Layout = ({ children }) => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+            Analytics
           </Typography>
-          <Button color="inherit">Login</Button>
+          {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBarComponent>
-      <div >{children}</div>
+      <div style={{paddingTop: '100px'}}>{children}</div>
       <AppBarComponent postition="static" isBottom={true}>
         Footer
       </AppBarComponent>
