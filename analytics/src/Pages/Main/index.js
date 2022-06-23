@@ -4,8 +4,14 @@ import Button from "@mui/material/Button";
 import { useState } from "react";
 import * as XLSX from "xlsx";
 import LinearLoader from "../../components/Spinner";
-import { replaceSpaceWithCharacter, toTitleCase } from "../../components/Helper";
-import DataTableGrid from '../../components/Grid'
+import {
+  replaceSpaceWithCharacter,
+  toTitleCase,
+} from "../../components/Helper";
+import DataTableGrid from "../../components/Grid";
+import AdvanceFilter from "../../components/Filter";
+import CustomList from "../../components/List";
+import BasicAlerts from "../../components/Alert";
 const Input = styled("input")({
   display: "none",
 });
@@ -13,7 +19,16 @@ const Input = styled("input")({
 const Main = () => {
   const [columns, setColumns] = useState([]);
   const [gridData, setGridData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [isDataFiltered, setIsDataFiltered] = useState(false);
+  const [missingJCRecord, setMissingRecord] = useState([]);
+  const [isGridShow, setIsGridShow] = useState(true);
+  const [alert, setAlert] = useState({
+    isAlert: false,
+    severity: "",
+    text: "",
+  });
 
   const onChange = (e) => {
     setIsVisible(true);
@@ -26,7 +41,6 @@ const Main = () => {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      //debugger;
       console.log(data);
       mapData(data);
     };
@@ -61,6 +75,108 @@ const Main = () => {
     setGridData(gridData);
     setIsVisible(false);
   };
+
+  const onCancel = () => {
+    setIsDataFiltered(false);
+    setAlert({ isAlert: false });
+  };
+
+  const filterHandleSubmit = (e) => {
+    setAlert({ isAlert: false });
+    switch (e.query) {
+      case 1: {
+        getMissingRecords(gridData, e.column);
+        break;
+      }
+      case 2: {
+        getDuplicateRecords(gridData, e.column);
+        break;
+      }
+      case 3: {
+        findMissingSequence(gridData, e.column);
+        break;
+      }
+      default: {
+      }
+    }
+  };
+
+  const getMissingRecords = async (data = [], field) => {
+    setIsVisible(true);
+    let missingData = [];
+
+    await Promise.all(
+      data.map((el) => {
+        if (el[field] == null || el[field] == undefined || el[field] == "") {
+          missingData.push(el);
+        }
+      })
+    );
+
+    setIsDataFiltered(true);
+    setIsGridShow(true);
+    setFilteredData(missingData);
+    setIsVisible(false);
+    console.log("MissingData", missingData);
+  };
+
+  const getDuplicateRecords = async (data = [], field) => {
+    setIsVisible(true);
+
+    const duplicateIds = await Promise.all(
+      data.map((v) => v[field]).filter((v, i, vIds) => vIds.indexOf(v) !== i)
+    );
+
+    const duplicates = await Promise.all(
+      data.filter((obj) => duplicateIds.includes(obj[field]))
+    );
+
+    console.log("duplicates", JSON.stringify(duplicates));
+    setIsDataFiltered(true);
+    setIsGridShow(true);
+    setFilteredData(duplicates.sort((a, b) => a[field] - b[field]));
+    setIsVisible(false);
+  };
+
+  const findMissingSequence = async (data = [], field) => {
+    if (field != "Jc_Code") {
+      setAlert({
+        isAlert: true,
+        severity: "error",
+        text: "This filter is only applicable for JC Code",
+      });
+      return;
+    }
+    setIsVisible(true);
+    let missingRecords = [];
+
+    await Promise.all(
+      data
+        .filter((i) => i)
+        .map((el, index) => {
+          let difference;
+
+          difference = (data[index + 1]?.Jc_Code || 0) - el.Jc_Code;
+          if (difference > 1) {
+            let r1 = el.Jc_Code + 1;
+            let r2 = el.Jc_Code + difference - 1;
+            let text =
+              r1 == r2
+                ? `${el.Jc_Code + 1} is missing`
+                : `${el.Jc_Code + 1} - ${
+                    el.Jc_Code + difference - 1
+                  } is missing`;
+            console.log(text);
+            missingRecords.push(text);
+          }
+        })
+    );
+
+    setIsVisible(false);
+    setIsGridShow(false);
+    setMissingRecord(missingRecords);
+  };
+
   return (
     <>
       <LinearLoader isVisible={isVisible} />
@@ -76,9 +192,25 @@ const Main = () => {
           Upload
         </Button>
       </label>
+      <AdvanceFilter
+        columns={columns}
+        handleSubmit={filterHandleSubmit}
+        onCancel={onCancel}
+      />
+      {alert.isAlert ? (
+        <BasicAlerts severity={alert.severity} text={alert.text}></BasicAlerts>
+      ) : null}
+      {isGridShow ? (
+        <DataTableGrid
+          gridData={isDataFiltered ? filteredData : gridData}
+          columns={columns}
+          isCheckbox={false}
+        />
+      ) : (
+        <CustomList title="Missing JC Code" data={missingJCRecord} />
+      )}
 
-      <DataTableGrid data={gridData} columns={columns} isCheckbox={false} />
-      <LinearLoader isVisible={isVisible} />
+      {/* <LinearLoader isVisible={isVisible} /> */}
     </>
   );
 };
