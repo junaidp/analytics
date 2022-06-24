@@ -17,7 +17,7 @@ const CustomSelect = ({
   return (
     <>
       {" "}
-      <FormControl style={{ width: "50%" }}>
+      <FormControl style={{ width: "50%", padding: 5 }}>
         <InputLabel id={stateKey}>{title}</InputLabel>
         <Select
           id={stateKey}

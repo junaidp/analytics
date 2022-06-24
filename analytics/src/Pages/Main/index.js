@@ -18,6 +18,7 @@ const Input = styled("input")({
 
 const Main = () => {
   const [columns, setColumns] = useState([]);
+  const [newCoumns, setNewColumns] = useState([]);
   const [gridData, setGridData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
@@ -68,7 +69,6 @@ const Main = () => {
           record["id"] = index;
           record[obj.field] = el[index2];
         });
-        debugger;
         gridData.push(record);
       }
     });
@@ -78,11 +78,14 @@ const Main = () => {
 
   const onCancel = () => {
     setIsDataFiltered(false);
+    setIsGridShow(true);
+    setIsVisible(false);
     setAlert({ isAlert: false });
   };
 
   const filterHandleSubmit = (e) => {
     setAlert({ isAlert: false });
+    setIsVisible(true);
     switch (e.query) {
       case 1: {
         getMissingRecords(gridData, e.column);
@@ -102,16 +105,13 @@ const Main = () => {
   };
 
   const getMissingRecords = async (data = [], field) => {
-    setIsVisible(true);
     let missingData = [];
-
-    await Promise.all(
-      data.map((el) => {
-        if (el[field] == null || el[field] == undefined || el[field] == "") {
-          missingData.push(el);
-        }
-      })
-    );
+    data.map((el) => {
+      if (el[field] == null || el[field] == undefined || el[field] == "") {
+        missingData.push(el);
+        console.log("el", el);
+      }
+    });
 
     setIsDataFiltered(true);
     setIsGridShow(true);
@@ -121,15 +121,11 @@ const Main = () => {
   };
 
   const getDuplicateRecords = async (data = [], field) => {
-    setIsVisible(true);
+    const duplicateIds = data
+      .map((v) => v[field])
+      .filter((v, i, vIds) => vIds.indexOf(v) !== i);
 
-    const duplicateIds = await Promise.all(
-      data.map((v) => v[field]).filter((v, i, vIds) => vIds.indexOf(v) !== i)
-    );
-
-    const duplicates = await Promise.all(
-      data.filter((obj) => duplicateIds.includes(obj[field]))
-    );
+    const duplicates = data.filter((obj) => duplicateIds.includes(obj[field]));
 
     console.log("duplicates", JSON.stringify(duplicates));
     setIsDataFiltered(true);
@@ -147,7 +143,6 @@ const Main = () => {
       });
       return;
     }
-    setIsVisible(true);
     let missingRecords = [];
 
     await Promise.all(
@@ -166,20 +161,34 @@ const Main = () => {
                 : `${el.Jc_Code + 1} - ${
                     el.Jc_Code + difference - 1
                   } is missing`;
-            console.log(text);
-            missingRecords.push(text);
+
+            missingRecords.push({ id: index, field: text });
           }
         })
     );
-
-    setIsVisible(false);
+    console.log("missingRecords", missingRecords);
+    setNewColumns([
+      {
+        field: "id",
+        headerName: "S No.",
+        width: 100,
+      },
+      {
+        field: "field",
+        headerName: "Range",
+        width: 300,
+      },
+    ]);
+    setIsDataFiltered(true);
     setIsGridShow(false);
-    setMissingRecord(missingRecords);
+    setFilteredData(missingRecords);
+    setIsVisible(false);
+    // setMissingRecord(missingRecords);
   };
 
   return (
     <>
-      <LinearLoader isVisible={isVisible} />
+      {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
       <label htmlFor="contained-button-file">
         <Input
           accept="doc/*"
@@ -200,15 +209,12 @@ const Main = () => {
       {alert.isAlert ? (
         <BasicAlerts severity={alert.severity} text={alert.text}></BasicAlerts>
       ) : null}
-      {isGridShow ? (
-        <DataTableGrid
-          gridData={isDataFiltered ? filteredData : gridData}
-          columns={columns}
-          isCheckbox={false}
-        />
-      ) : (
-        <CustomList title="Missing JC Code" data={missingJCRecord} />
-      )}
+      <DataTableGrid
+        gridData={isDataFiltered ? filteredData : gridData}
+        columns={isGridShow ? columns : newCoumns}
+        isCheckbox={false}
+      />
+      {/* <CustomList title="Missing JC Code" data={missingJCRecord} /> */}
 
       {/* <LinearLoader isVisible={isVisible} /> */}
     </>
