@@ -14,7 +14,7 @@ const AdvanceFilter = ({
   handleSubmit = (e) => {},
   onCancel = () => {}
 }) => {
-  console.log("columns", columns);
+  // console.log("columns", columns);
   const [filterState, setFilterState] = React.useState({
     column: "",
     query: 0,
