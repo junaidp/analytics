@@ -110,42 +110,42 @@ const Main = () => {
     setAlert({ isAlert: false });
   };
 
-  const filterHandleSubmit = (e) => {
-    setAlert({ isAlert: false });
-    setIsVisible(true);
-    switch (e.query) {
-      case 1: {
-        getMissingRecords(gridData, e.column);
-        break;
-      }
-      case 2: {
-        getDuplicateRecords(gridData, e.column);
-        break;
-      }
-      case 3: {
-        findMissingSequence(gridData, e.column);
-        break;
-      }
-      default: {
-      }
-    }
-  };
+  // const filterHandleSubmit = (e) => {
+  //   setAlert({ isAlert: false });
+  //   setIsVisible(true);
+  //   switch (e.query) {
+  //     case 1: {
+  //       getMissingRecords(gridData, e.column);
+  //       break;
+  //     }
+  //     case 2: {
+  //       getDuplicateRecords(gridData, e.column);
+  //       break;
+  //     }
+  //     case 3: {
+  //       findMissingSequence(gridData, e.column);
+  //       break;
+  //     }
+  //     default: {
+  //     }
+  //   }
+  // };
 
-  const getMissingRecords = async (data = [], field) => {
-    let missingData = [];
-    data.map((el) => {
-      if (el[field] == null || el[field] == undefined || el[field] == "") {
-        missingData.push(el);
-        console.log("el", el);
-      }
-    });
+  // const getMissingRecords = async (data = [], field) => {
+  //   let missingData = [];
+  //   data.map((el) => {
+  //     if (el[field] == null || el[field] == undefined || el[field] == "") {
+  //       missingData.push(el);
+  //       console.log("el", el);
+  //     }
+  //   });
 
-    setIsDataFiltered(true);
-    setIsGridShow(true);
-    setFilteredData(missingData);
-    setIsVisible(false);
-    console.log("MissingData", missingData);
-  };
+  //   setIsDataFiltered(true);
+  //   setIsGridShow(true);
+  //   setFilteredData(missingData);
+  //   setIsVisible(false);
+  //   console.log("MissingData", missingData);
+  // };
 
   const getDuplicateRecords = async (data = [], field) => {
     const duplicateIds = data
@@ -153,70 +153,65 @@ const Main = () => {
       .filter((v, i, vIds) => vIds.indexOf(v) !== i);
 
     const duplicates = data.filter((obj) => duplicateIds.includes(obj[field]));
-
-    console.log("duplicates", JSON.stringify(duplicates));
-    setIsDataFiltered(true);
-    setIsGridShow(true);
-    setFilteredData(duplicates.sort((a, b) => a[field] - b[field]));
-    setIsVisible(false);
+    setDuplicatesJcRecords(duplicates);
   };
 
-  const findMissingSequence = async (data = [], field) => {
-    if (field != "Jc_Code") {
-      setAlert({
-        isAlert: true,
-        severity: "error",
-        text: "This filter is only applicable for JC Code",
-      });
-      return;
-    }
-    let missingRecords = [];
+  // const findMissingSequence = async (data = [], field) => {
+  //   if (field != "Jc_Code") {
+  //     setAlert({
+  //       isAlert: true,
+  //       severity: "error",
+  //       text: "This filter is only applicable for JC Code",
+  //     });
+  //     return;
+  //   }
+  //   let missingRecords = [];
 
-    await Promise.all(
-      data
-        .filter((i) => i)
-        .map((el, index) => {
-          let difference;
+  //   await Promise.all(
+  //     data
+  //       .filter((i) => i)
+  //       .map((el, index) => {
+  //         let difference;
 
-          difference = (data[index + 1]?.Jc_Code || 0) - el.Jc_Code;
-          if (difference > 1) {
-            let r1 = el.Jc_Code + 1;
-            let r2 = el.Jc_Code + difference - 1;
-            let text =
-              r1 == r2
-                ? `${el.Jc_Code + 1} is missing`
-                : `${el.Jc_Code + 1} - ${
-                    el.Jc_Code + difference - 1
-                  } is missing`;
+  //         difference = (data[index + 1]?.Jc_Code || 0) - el.Jc_Code;
+  //         if (difference > 1) {
+  //           let r1 = el.Jc_Code + 1;
+  //           let r2 = el.Jc_Code + difference - 1;
+  //           let text =
+  //             r1 == r2
+  //               ? `${el.Jc_Code + 1} is missing`
+  //               : `${el.Jc_Code + 1} - ${
+  //                   el.Jc_Code + difference - 1
+  //                 } is missing`;
 
-            missingRecords.push({ id: index, field: text });
-          }
-        })
-    );
-    console.log("missingRecords", missingRecords);
-    setNewColumns([
-      {
-        field: "id",
-        headerName: "S No.",
-        width: 100,
-      },
-      {
-        field: "field",
-        headerName: "Range",
-        width: 300,
-      },
-    ]);
-    setIsDataFiltered(true);
-    setIsGridShow(false);
-    setFilteredData(missingRecords);
-    setIsVisible(false);
-    // setMissingRecord(missingRecords);
-  };
+  //           missingRecords.push({ id: index, field: text });
+  //         }
+  //       })
+  //   );
+  //   console.log("missingRecords", missingRecords);
+  //   setNewColumns([
+  //     {
+  //       field: "id",
+  //       headerName: "S No.",
+  //       width: 100,
+  //     },
+  //     {
+  //       field: "field",
+  //       headerName: "Range",
+  //       width: 300,
+  //     },
+  //   ]);
+  //   setIsDataFiltered(true);
+  //   setIsGridShow(false);
+  //   setFilteredData(missingRecords);
+  //   setIsVisible(false);
+  //   // setMissingRecord(missingRecords);
+  // };
 
   const handleAnalyzeData = () => {
     let missingData = [];
     let missingSequence = [];
-    let duplicates = [];
+    //let duplicates = [];
     gridData.map((el, index) => {
       if (el.Jc_Code == null || el.Jc_Code == undefined || el.Jc_Code == "") {
         missingData.push(el);
@@ -235,15 +230,15 @@ const Main = () => {
         missingSequence.push({ id: index, field: text });
       }
 
-      let duplicateValue = gridData.filter((i) => i.Jc_Code === el.Jc_Code);
-      debugger;
-      if (duplicateValue.length > 1) {
-        if (!duplicates.some((i) => i.Jc_Code == el.Jc_Code))
-          duplicates.push(...duplicateValue);
-      }
+      // let duplicateValue = gridData.filter((i) => i.Jc_Code === el.Jc_Code);
+      // debugger;
+      // if (duplicateValue.length > 1) {
+      //   if (!duplicates.some((i) => i.Jc_Code == el.Jc_Code))
+      //     duplicates.push(...duplicateValue);
+      // }
     });
 
-    setDuplicatesJcRecords(duplicates);
+    getDuplicateRecords(gridData,'Jc_Code');
     setMissingJCCodeSequence(missingSequence);
     setUndefinedJCRecords(missingData);
   };
@@ -288,9 +283,6 @@ const Main = () => {
           Upload
         </Button>
       </label>
-      {/* <Button variant="outlined" onClick={handleAnalyzeData}>
-        Analyze
-      </Button> */}
       <Grid container spacing={2} className="issue-bar">
         <Grid item xs={3}>
           <Button variant="outlined" onClick={handleAnalyzeData}>
@@ -328,15 +320,6 @@ const Main = () => {
           />
         </Grid>
       </Grid>
-      {/* <AdvanceFilter
-        columns={columns}
-        handleSubmit={filterHandleSubmit}
-        onCancel={onCancel}
-      /> */}
-
-      {/* <CustomList title="Missing JC Code" data={missingJCRecord} /> */}
-
-      {/* <LinearLoader isVisible={isVisible} /> */}
     </>
   );
 };
