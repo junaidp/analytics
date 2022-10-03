@@ -18,6 +18,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import Service from "../Services";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import CustomAcordion from "../../components/CustomAcordion";
 const Input = styled("input")({
   display: "none",
 });
@@ -51,7 +53,7 @@ const Main = () => {
   useEffect(() => {
     console.log("useeffect");
     fetchData();
-  },[]);
+  }, []);
 
   const fetchData = (data) => {
     setIsVisible(true);
@@ -388,29 +390,32 @@ const Main = () => {
               </Button>
             </Grid>
           </Grid>
+          <Grid container spacing={3} className="issue-bar">
+            <Grid item xs={4}></Grid>
+            <Grid item xs={4}>
+              <FormControl sx={{ width: "100%" }}>
+                <InputLabel id="demo-simple-select-label">Fields</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select-label"
+                  // value={field}
+                  // onChange={handleChange}
+                  autoWidth
+                  label="Fields"
+                >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value={10}>Twenty</MenuItem>
+                  <MenuItem value={21}>Twenty one</MenuItem>
+                  <MenuItem value={22}>Twenty one and a half</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={4}></Grid>
+          </Grid>
         </label>
         <Grid container spacing={2} className="issue-bar">
           <Grid item xs={3}>
-            <Button variant="outlined" onClick={handleAnalyzeData}>
-              Analyze
-            </Button>
-            <Card style={{ marginTop: "15px", marginLeft: "25px" }}>
-              <label>Issues</label>
-              <Divider />
-              <CardContent>
-                {issues
-                  .filter((i) => i.data.length > 0)
-                  .map((el, index) => (
-                    <div
-                      onClick={(e) => setGridData(el)}
-                      style={{ cursor: "pointer" }}
-                      key={index}
-                    >
-                      {el.headerName}
-                    </div>
-                  ))}
-              </CardContent>
-            </Card>
+            <CustomAcordion data={columns} />
           </Grid>
           <Grid item xs={9}>
             {alert.isAlert ? (
