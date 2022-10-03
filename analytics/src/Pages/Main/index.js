@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
+import Service from "../Services";
 const Input = styled("input")({
   display: "none",
 });
@@ -30,7 +31,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const Main = () => {
-  const [columns, setColumns] = useState([]);
+  // const [columns, setColumns] = useState([]);
   const [newCoumns, setNewColumns] = useState([]);
   const [gridData, setGridData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -40,11 +41,98 @@ const Main = () => {
   const [undefinedJCRecords, setUndefinedJCRecords] = useState([]);
   const [duplicatesJcRecords, setDuplicatesJcRecords] = useState([]);
   const [isGridShow, setIsGridShow] = useState(true);
+  const { get, uploadFile } = Service;
   const [alert, setAlert] = useState({
     isAlert: false,
     severity: "",
     text: "",
   });
+
+  useEffect(() => {
+    console.log("useeffect");
+    fetchData();
+  },[]);
+
+  const fetchData = (data) => {
+    setIsVisible(true);
+    console.log("data", data);
+    get(data).then((res) => {
+      console.log("response", res);
+      setGridData(res);
+      setIsVisible(false);
+    });
+  }
+
+  const columns = [
+    { field: 'id', headerName: 'Id', width: 90 },
+    { field: 'jcCode', headerName: 'JcCode', width: 90 },
+    { field: 'date', headerName: 'Date', width: 90 },
+    {
+      field: 'clDate',
+      headerName: 'ClDate',
+      width: 90,
+    },
+    {
+      field: 'type',
+      headerName: 'Type',
+      width: 90,
+    },
+    {
+      field: 'cusDescription',
+      headerName: 'CusDescription',
+      width: 90,
+    },
+    {
+      field: 'service',
+      headerName: 'Service',
+      width: 90,
+    },
+    {
+      field: 'amt',
+      headerName: 'AMT',
+      width: 90,
+    },
+    {
+      field: 'warAMT',
+      headerName: 'WarAMT',
+      width: 90,
+    },
+    {
+      field: 'taxAMT',
+      headerName: 'TaxAMT',
+      width: 90,
+    },
+    {
+      field: 'totAMT',
+      headerName: 'TotAMT',
+      width: 90,
+    },
+    {
+      field: 'day',
+      headerName: 'Day',
+      width: 90,
+    },
+    {
+      field: 'month1',
+      headerName: 'Month1',
+      width: 90,
+    },
+    {
+      field: 'month',
+      headerName: 'Month',
+      width: 90,
+    },
+    {
+      field: 'year',
+      headerName: 'Year',
+      width: 90,
+    },
+    {
+      field: 'dt',
+      headerName: 'Dt',
+      width: 90,
+    },
+  ];
 
   const issues = [
     { field: 1, headerName: "Empty JC Codes", data: undefinedJCRecords },
@@ -57,51 +145,60 @@ const Main = () => {
   ];
 
   const onChange = async (e) => {
-    setIsVisible(true);
     const [file] = e.target.files;
-    const reader = new FileReader();
+    console.log("file", file);
+    fileUpload(file);
+    // const reader = new FileReader();
 
-    await Promise.all(
-      (reader.onload = (evt) => {
-        const bstr = evt.target.result;
-        const wb = XLSX.read(bstr, { type: "binary" });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-        console.log(data);
-        mapData(data);
-      }),
-      reader.readAsBinaryString(file)
-    );
+    // await Promise.all(
+    //   (reader.onload = (evt) => {
+    //     const bstr = evt.target.result;
+    //     const wb = XLSX.read(bstr, { type: "binary" });
+    //     const wsname = wb.SheetNames[0];
+    //     const ws = wb.Sheets[wsname];
+    //     const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
+    //     console.log(data);
+    //     mapData(data);
+    //   }),
+    //   reader.readAsBinaryString(file)
+    // );
   };
 
-  const mapData = (data = []) => {
-    let columns = [];
-    let gridData = [];
-    data.map((el, index) => {
-      if (index == 0) {
-        el.map((element) => {
-          let column = {
-            field: replaceSpaceWithCharacter(element),
-            headerName: toTitleCase(element),
-            width: 90,
-          };
-          columns.push(column);
-        });
-        setColumns(columns);
-      } else {
-        //console.log("columns", columns);
-        let record = {};
-        columns.forEach((obj, index2) => {
-          record["id"] = index;
-          record[obj.field] = el[index2];
-        });
-        gridData.push(record);
-      }
+  const fileUpload = (data) => {
+    setIsVisible(true);
+    uploadFile(data).then((res) => {
+      setGridData(res);
+      setIsVisible(false);
     });
-    setGridData(gridData);
-    setIsVisible(false);
-  };
+  }
+
+  // const mapData = (data = []) => {
+  //   let columns = [];
+  //   let gridData = [];
+  //   data.map((el, index) => {
+  //     if (index == 0) {
+  //       el.map((element) => {
+  //         let column = {
+  //           field: replaceSpaceWithCharacter(element),
+  //           headerName: toTitleCase(element),
+  //           width: 90,
+  //         };
+  //         columns.push(column);
+  //       });
+  //       setColumns(columns);
+  //     } else {
+  //       //console.log("columns", columns);
+  //       let record = {};
+  //       columns.forEach((obj, index2) => {
+  //         record["id"] = index;
+  //         record[obj.field] = el[index2];
+  //       });
+  //       gridData.push(record);
+  //     }
+  //   });
+  //   setGridData(gridData);
+  //   setIsVisible(false);
+  // };
 
   const onCancel = () => {
     setIsDataFiltered(false);
@@ -238,86 +335,96 @@ const Main = () => {
       // }
     });
 
-    getDuplicateRecords(gridData,'Jc_Code');
+    getDuplicateRecords(gridData, 'Jc_Code');
     setMissingJCCodeSequence(missingSequence);
     setUndefinedJCRecords(missingData);
   };
 
-  const handleFilterData = (event) => {
-    if (event.field == 3) {
-      setNewColumns([
-        {
-          field: "id",
-          headerName: "S No.",
-          width: 100,
-        },
-        {
-          field: "field",
-          headerName: "Range",
-          width: 300,
-        },
-      ]);
-      setIsGridShow(false);
-    } else {
-      setIsGridShow(true);
-    }
-    setIsDataFiltered(true);
-    setFilteredData(event.data);
-  };
+  // const handleFilterData = (event) => {
+  //   if (event.field == 3) {
+  //     setNewColumns([
+  //       {
+  //         field: "id",
+  //         headerName: "S No.",
+  //         width: 100,
+  //       },
+  //       {
+  //         field: "field",
+  //         headerName: "Range",
+  //         width: 300,
+  //       },
+  //     ]);
+  //     setIsGridShow(false);
+  //   } else {
+  //     setIsGridShow(true);
+  //   }
+  //   setIsDataFiltered(true);
+  //   setFilteredData(event.data);
+  // };
 
   console.log("missingSequence", missingJCCodeSequence);
   console.log("undefinedJCRecords", undefinedJCRecords);
 
   return (
     <>
-      {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
-      <label htmlFor="contained-button-file">
-        <Input
-          accept="doc/*"
-          id="contained-button-file"
-          multiple
-          type="file"
-          onChange={onChange}
-        />
-        <Button variant="contained" component="span">
-          Upload
-        </Button>
-      </label>
-      <Grid container spacing={2} className="issue-bar">
-        <Grid item xs={3}>
-          <Button variant="outlined" onClick={handleAnalyzeData}>
-            Analyze
-          </Button>
-          <Card style={{ marginTop: "15px", marginLeft: "25px" }}>
-            <label>Issues</label>
-            <Divider />
-            <CardContent>
-              {issues
-                .filter((i) => i.data.length > 0)
-                .map((el, index) => (
-                  <div
-                    onClick={(e) => handleFilterData(el)}
-                    style={{ cursor: "pointer" }}
-                    key={index}
-                  >
-                    {el.headerName}
-                  </div>
-                ))}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={9}>
-          {alert.isAlert ? (
-            <BasicAlerts
-              severity={alert.severity}
-              text={alert.text}
-            ></BasicAlerts>
-          ) : null}
-          <DataTableGrid
-            gridData={isDataFiltered ? filteredData : gridData}
-            columns={isGridShow ? columns : newCoumns}
-            isCheckbox={false}
+      <Grid>
+        {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
+        <label htmlFor="contained-button-file">
+          <Input
+            id="contained-button-file"
+            multiple
+            type="file"
+            onChange={onChange}
           />
+          <Grid container spacing={2} className="issue-bar">
+            <Grid item xs={11}></Grid>
+            <Grid item xs={1}
+              style={{
+                paddingRight: '50px',
+                paddingLeft: '10px'
+              }}>
+              <Button variant="contained" component="span">
+                Upload
+              </Button>
+            </Grid>
+          </Grid>
+        </label>
+        <Grid container spacing={2} className="issue-bar">
+          <Grid item xs={3}>
+            <Button variant="outlined" onClick={handleAnalyzeData}>
+              Analyze
+            </Button>
+            <Card style={{ marginTop: "15px", marginLeft: "25px" }}>
+              <label>Issues</label>
+              <Divider />
+              <CardContent>
+                {issues
+                  .filter((i) => i.data.length > 0)
+                  .map((el, index) => (
+                    <div
+                      onClick={(e) => setGridData(el)}
+                      style={{ cursor: "pointer" }}
+                      key={index}
+                    >
+                      {el.headerName}
+                    </div>
+                  ))}
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={9}>
+            {alert.isAlert ? (
+              <BasicAlerts
+                severity={alert.severity}
+                text={alert.text}
+              ></BasicAlerts>
+            ) : null}
+            <DataTableGrid
+              gridData={gridData}
+              columns={columns}
+              isCheckbox={false}
+            />
+          </Grid>
         </Grid>
       </Grid>
     </>

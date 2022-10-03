@@ -1,7 +1,7 @@
 import React from "react";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
-import { Box, CircularProgress } from "@mui/material";
+// import { Box, CircularProgress } from "@mui/material";
 
 const LinearLoader = ({ isVisible }) => {
   return (
