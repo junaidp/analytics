@@ -2,23 +2,23 @@ import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import * as XLSX from "xlsx";
+// import * as XLSX from "xlsx";
 import LinearLoader from "../../components/Spinner";
-import {
-  replaceSpaceWithCharacter,
-  toTitleCase,
-} from "../../components/Helper";
+// import {
+//   replaceSpaceWithCharacter,
+//   toTitleCase,
+// } from "../../components/Helper";
 import DataTableGrid from "../../components/Grid";
 // import AdvanceFilter from "../../components/Filter";
 // import CustomList from "../../components/List";
 import BasicAlerts from "../../components/Alert";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Divider from "@mui/material/Divider";
+// import Card from "@mui/material/Card";
+// import CardContent from "@mui/material/CardContent";
+// import Divider from "@mui/material/Divider";
 import Service from "../Services";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+// import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import CustomAcordion from "../../components/CustomAcordion";
 const Input = styled("input")({
   display: "none",
@@ -43,7 +43,7 @@ const Main = () => {
   const [undefinedJCRecords, setUndefinedJCRecords] = useState([]);
   const [duplicatesJcRecords, setDuplicatesJcRecords] = useState([]);
   const [isGridShow, setIsGridShow] = useState(true);
-  const { get, uploadFile } = Service;
+  const { get, uploadFile, filterData } = Service;
   const [alert, setAlert] = useState({
     isAlert: false,
     severity: "",
@@ -66,85 +66,115 @@ const Main = () => {
   }
 
   const columns = [
-    { field: 'id', headerName: 'Id', width: 90 },
-    { field: 'jcCode', headerName: 'JcCode', width: 90 },
-    { field: 'date', headerName: 'Date', width: 90 },
+    { field: 'id', headerName: 'Id', width: 90, typeId: 'jcCode' },
+    { field: 'jcCode', headerName: 'JcCode', width: 90, typeId: 'jcCode' },
+    { field: 'date', headerName: 'Date', width: 90, typeId: 'date' },
     {
       field: 'clDate',
       headerName: 'ClDate',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'type',
       headerName: 'Type',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'cusDescription',
       headerName: 'CusDescription',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'service',
       headerName: 'Service',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'amt',
       headerName: 'AMT',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'warAMT',
       headerName: 'WarAMT',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'taxAMT',
       headerName: 'TaxAMT',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'totAMT',
       headerName: 'TotAMT',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'day',
       headerName: 'Day',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'month1',
       headerName: 'Month1',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'month',
       headerName: 'Month',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'year',
       headerName: 'Year',
       width: 90,
+      typeId: 'jcCode'
     },
     {
       field: 'dt',
       headerName: 'Dt',
       width: 90,
+      typeId: 'jcCode'
     },
   ];
 
   const issues = [
-    { field: 1, headerName: "Empty JC Codes", data: undefinedJCRecords },
-    { field: 2, headerName: "Duplicate JC Codes", data: duplicatesJcRecords },
+    { id: 1, name: "Empty JC Codes", typeId: 'jcCode' },
+    { id: 2, name: "Duplicate JC Codes", typeId: 'jcCode' },
     {
-      field: 3,
-      headerName: "Missing Sequence in JC Code",
-      data: missingJCCodeSequence,
+      id: 3,
+      name: "Missing Sequence in JC Code",
+      typeId: 'jcCode'
     },
+    { id: 4, name: "Empty JC Codes", typeId: 'date' },
+    { id: 5, name: "Duplicate JC Codes", typeId: 'clDate' },
+    {
+      id: 6,
+      name: "Missing Sequence in JC Code",
+      typeId: 'clDate'
+    }
   ];
+
+  // const fetchData = (data) => {
+  //   setIsVisible(true);
+  //   console.log("data", data);
+  //   get(data).then((res) => {
+  //     console.log("response", res);
+  //     setGridData(res);
+  //     setIsVisible(false);
+  //   });
+  // }
 
   const onChange = async (e) => {
     const [file] = e.target.files;
@@ -208,6 +238,22 @@ const Main = () => {
     setIsVisible(false);
     setAlert({ isAlert: false });
   };
+
+  const handleIssues = async (e) => {
+    filterIssues(e)
+  };
+
+  const filterIssues = (data) => {
+    setIsVisible(true);
+    console.log("data", data);
+    filterData(data).then((res) => {
+      console.log("response", res);
+      setGridData(res);
+      setIsVisible(false);
+    });
+  }
+  
+
 
   // const filterHandleSubmit = (e) => {
   //   setAlert({ isAlert: false });
@@ -382,15 +428,17 @@ const Main = () => {
             <Grid item xs={11}></Grid>
             <Grid item xs={1}
               style={{
+                marginTop: '5px',
                 paddingRight: '50px',
                 paddingLeft: '10px'
+                // padding: '10px'
               }}>
               <Button variant="contained" component="span">
                 Upload
               </Button>
             </Grid>
           </Grid>
-          <Grid container spacing={3} className="issue-bar">
+          {/* <Grid container spacing={3} className="issue-bar">
             <Grid item xs={4}></Grid>
             <Grid item xs={4}>
               <FormControl sx={{ width: "100%" }}>
@@ -411,11 +459,11 @@ const Main = () => {
               </FormControl>
             </Grid>
             <Grid item xs={4}></Grid>
-          </Grid>
+          </Grid> */}
         </label>
         <Grid container spacing={2} className="issue-bar">
-          <Grid item xs={3}>
-            <CustomAcordion data={columns} />
+          <Grid item xs={3} style={{ marginTop: '17px', paddingright: '10px' }}>
+            <CustomAcordion columns={columns} issues={issues} handleIssues={handleIssues} />
           </Grid>
           <Grid item xs={9}>
             {alert.isAlert ? (

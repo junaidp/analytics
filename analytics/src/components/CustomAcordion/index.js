@@ -1,14 +1,22 @@
+import React from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import { GridExpandMoreIcon } from "@mui/x-data-grid";
-import * as React from "react";
 
-const CustomAcordion = ({ data = [] }) => {
+const CustomAcordion = ({ issues = [], columns = [], handleIssues }) => {
+    console.log("issues", issues);
+    console.log("columns", columns);
+    const [expanded, setExpanded] = React.useState(false);
+    const [selectedColumn, setColumn] = React.useState();
+
+    const onAccordionClick = (item) => {
+        setColumn(item.field);
+    }
 
     return (
         <div>
-            {data.map((item) => {
+            {columns.map((item) => {
                 return (
-                    <Accordion>
+                    <Accordion sx={{ marginLeft: 2 }} expanded={item.field === selectedColumn} onClick={() => onAccordionClick(item)} >
                         <AccordionSummary
                             expandIcon={<GridExpandMoreIcon />}
                             aria-controls="panel1a-content"
@@ -16,11 +24,14 @@ const CustomAcordion = ({ data = [] }) => {
                         >
                             <Typography>{item.headerName}</Typography>
                         </AccordionSummary>
-                        <AccordionDetails>
-                            <Typography>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                                malesuada lacus ex, sit amet blandit leo lobortis eget.
-                            </Typography>
+                        <AccordionDetails >
+                            {issues.length > 0 &&
+                                issues?.filter(i => i.typeId == selectedColumn)?.map((el) => (
+                                    <Typography onClick={() => handleIssues(el)}>
+                                        {el.name}
+                                    </Typography>
+                                ))
+                            }
                         </AccordionDetails>
                     </Accordion>
                 )
