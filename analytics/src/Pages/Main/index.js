@@ -9,7 +9,6 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Service from "../Services";
 import CustomAcordion from "../../components/CustomAcordion";
-
 import {
   replaceSpaceWithCharacter,
   toTitleCase,
@@ -18,7 +17,7 @@ import { Box } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
-import FileUploaderRestrictions from "../../components/SingleFileUploader/FileUploaderRestrictions";
+import FileUploaderRestrictions from "../../components/SingleFileUploader/FileUploaderRestrictions"
 
 const fileTypes = [".xlsx", ".csv"];
 
@@ -173,7 +172,8 @@ const Main = () => {
   // }
 
   const handleFileChange = async (e) => {
-    const [file] = e.target.files;
+    debugger
+    const [file] = e
     console.log("file", file);
     fileUpload(file);
     // const reader = new FileReader();
@@ -435,7 +435,6 @@ const Main = () => {
 
   return (
     <>
-      {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
       {/* <label htmlFor="contained-button-file">
         <Input
           accept="doc/*"
@@ -462,12 +461,14 @@ const Main = () => {
                 maxFiles={1}
               />
             </Box>
+            {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
+
           </Grid>
           <Grid item xs={3}>
             {/* <Button variant="outlined" onClick={handleAnalyzeData}>
               Analyze
             </Button> */}
-            <Card style={{ marginTop: "15px" }}>
+            {/* <Card style={{ marginTop: "15px" }}>
               <label>Issues</label>
               <Divider />
               <CardContent>
@@ -483,7 +484,9 @@ const Main = () => {
                     </div>
                   ))}
               </CardContent>
-            </Card>
+
+            </Card> */}
+            <CustomAcordion columns={columns} issues={issues} handleIssues={handleIssues} />
           </Grid>
           <Grid item xs={9}>
             {alert.isAlert ? (

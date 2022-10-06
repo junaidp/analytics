@@ -19,6 +19,7 @@ import FileDocumentOutline from 'mdi-material-ui/FileDocumentOutline'
 // ** Third Party Components
 import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
+import { isDisabled } from '@testing-library/user-event/dist/utils'
 
 // Styled component for the upload image inside the dropzone area
 const Img = styled('img')(({ theme }) => ({
@@ -106,7 +107,7 @@ const FileUploaderRestrictions = (
   return (
     <Fragment>
       <Grid container spacing={5} {...getRootProps({ className: 'dropzone' })}>
-        <input {...getInputProps()} />
+        <input {...getInputProps()} disabled={true} />
         <Box sx={{ display: 'flex', flexDirection: ['column', 'column', 'row'], alignItems: 'center' }}>
 
           {
