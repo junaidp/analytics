@@ -2,38 +2,29 @@ import React, { useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-// import * as XLSX from "xlsx";
 import LinearLoader from "../../components/Spinner";
-// import {
-//   replaceSpaceWithCharacter,
-//   toTitleCase,
-// } from "../../components/Helper";
 import DataTableGrid from "../../components/Grid";
-// import AdvanceFilter from "../../components/Filter";
-// import CustomList from "../../components/List";
 import BasicAlerts from "../../components/Alert";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
-// import Card from "@mui/material/Card";
-// import CardContent from "@mui/material/CardContent";
-// import Divider from "@mui/material/Divider";
 import Service from "../Services";
-// import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import CustomAcordion from "../../components/CustomAcordion";
-const Input = styled("input")({
-  display: "none",
-});
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
+import {
+  replaceSpaceWithCharacter,
+  toTitleCase,
+} from "../../components/Helper";
+import { Box } from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Divider from "@mui/material/Divider";
+import FileUploaderRestrictions from "../../components/SingleFileUploader/FileUploaderRestrictions";
+
+const fileTypes = [".xlsx", ".csv"];
 
 const Main = () => {
-  // const [columns, setColumns] = useState([]);
+
+  //  const [columns, setColumns] = useState([]);
   const [newCoumns, setNewColumns] = useState([]);
   const [gridData, setGridData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
@@ -42,6 +33,10 @@ const Main = () => {
   const [missingJCCodeSequence, setMissingJCCodeSequence] = useState([]);
   const [undefinedJCRecords, setUndefinedJCRecords] = useState([]);
   const [duplicatesJcRecords, setDuplicatesJcRecords] = useState([]);
+  const [
+    duplicatesPartsWithDifferentPrice,
+    setDuplicatesPartsWithDifferentPrice,
+  ] = useState([]);
   const [isGridShow, setIsGridShow] = useState(true);
   const { get, uploadFile, filterData } = Service;
   const [alert, setAlert] = useState({
@@ -49,6 +44,7 @@ const Main = () => {
     severity: "",
     text: "",
   });
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     console.log("useeffect");
@@ -63,107 +59,107 @@ const Main = () => {
       setGridData(res);
       setIsVisible(false);
     });
-  }
+  };
 
   const columns = [
-    { field: 'id', headerName: 'Id', width: 90, typeId: 'jcCode' },
-    { field: 'jcCode', headerName: 'JcCode', width: 90, typeId: 'jcCode' },
-    { field: 'date', headerName: 'Date', width: 90, typeId: 'date' },
+    { field: "id", headerName: "Id", width: 90, typeId: "jcCode" },
+    { field: "jcCode", headerName: "JcCode", width: 90, typeId: "jcCode" },
+    { field: "date", headerName: "Date", width: 90, typeId: "date" },
     {
-      field: 'clDate',
-      headerName: 'ClDate',
+      field: "clDate",
+      headerName: "ClDate",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'type',
-      headerName: 'Type',
+      field: "type",
+      headerName: "Type",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'cusDescription',
-      headerName: 'CusDescription',
+      field: "cusDescription",
+      headerName: "CusDescription",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'service',
-      headerName: 'Service',
+      field: "service",
+      headerName: "Service",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'amt',
-      headerName: 'AMT',
+      field: "amt",
+      headerName: "AMT",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'warAMT',
-      headerName: 'WarAMT',
+      field: "warAMT",
+      headerName: "WarAMT",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'taxAMT',
-      headerName: 'TaxAMT',
+      field: "taxAMT",
+      headerName: "TaxAMT",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'totAMT',
-      headerName: 'TotAMT',
+      field: "totAMT",
+      headerName: "TotAMT",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'day',
-      headerName: 'Day',
+      field: "day",
+      headerName: "Day",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'month1',
-      headerName: 'Month1',
+      field: "month1",
+      headerName: "Month1",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'month',
-      headerName: 'Month',
+      field: "month",
+      headerName: "Month",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'year',
-      headerName: 'Year',
+      field: "year",
+      headerName: "Year",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
     {
-      field: 'dt',
-      headerName: 'Dt',
+      field: "dt",
+      headerName: "Dt",
       width: 90,
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
   ];
 
   const issues = [
-    { id: 1, name: "Empty JC Codes", typeId: 'jcCode' },
-    { id: 2, name: "Duplicate JC Codes", typeId: 'jcCode' },
+    { id: 1, name: "Empty JC Codes", typeId: "jcCode" },
+    { id: 2, name: "Duplicate JC Codes", typeId: "jcCode" },
     {
       id: 3,
       name: "Missing Sequence in JC Code",
-      typeId: 'jcCode'
+      typeId: "jcCode",
     },
-    { id: 4, name: "Empty JC Codes", typeId: 'date' },
-    { id: 5, name: "Duplicate JC Codes", typeId: 'clDate' },
+    { id: 4, name: "Empty JC Codes", typeId: "date" },
+    { id: 5, name: "Duplicate JC Codes", typeId: "clDate" },
     {
       id: 6,
       name: "Missing Sequence in JC Code",
-      typeId: 'clDate'
-    }
+      typeId: "clDate",
+    },
   ];
 
   // const fetchData = (data) => {
@@ -176,7 +172,7 @@ const Main = () => {
   //   });
   // }
 
-  const onChange = async (e) => {
+  const handleFileChange = async (e) => {
     const [file] = e.target.files;
     console.log("file", file);
     fileUpload(file);
@@ -202,7 +198,7 @@ const Main = () => {
       setGridData(res);
       setIsVisible(false);
     });
-  }
+  };
 
   // const mapData = (data = []) => {
   //   let columns = [];
@@ -240,7 +236,7 @@ const Main = () => {
   };
 
   const handleIssues = async (e) => {
-    filterIssues(e)
+    filterIssues(e);
   };
 
   const filterIssues = (data) => {
@@ -251,9 +247,7 @@ const Main = () => {
       setGridData(res);
       setIsVisible(false);
     });
-  }
-  
-
+  };
 
   // const filterHandleSubmit = (e) => {
   //   setAlert({ isAlert: false });
@@ -292,14 +286,33 @@ const Main = () => {
   //   console.log("MissingData", missingData);
   // };
 
-  const getDuplicateRecords = async (data = [], field) => {
-    const duplicateIds = data
-      .map((v) => v[field])
-      .filter((v, i, vIds) => vIds.indexOf(v) !== i);
+  const getDuplicatePartsWithDifferentPrice = async (data = [], field) => {
+    // const duplicateParts = data
+    //   .map((v) => v[field])
+    //   .filter((v, i, vIds) => vIds.indexOf(v) !== i);
+    // debugger
+    // const duplicates = data.filter((obj) => duplicateParts.includes(obj[field]));
+    // console.log("duplicateParts",duplicates);
+    // setDuplicatesPartsWithDifferentPrice(duplicates);
+    debugger;
+    let a = data.filter((value, index, self) => {
+      return (
+        index ===
+        self.findIndex(
+          (t) =>
+            t[field] === value[field] && t["Tot._Amt."] === value["Tot._Amt."]
+        )
+      );
+    });
+    //let a = data.filter((v,i,a)=>a.findIndex(v2=>['Part/Service','Tot._Amt.'].every(k=>v2[k] ===v[k]))===i)
 
-    const duplicates = data.filter((obj) => duplicateIds.includes(obj[field]));
-    setDuplicatesJcRecords(duplicates);
+    setDuplicatesPartsWithDifferentPrice(a);
   };
+
+  const getDuplicateRecords = gridData.reduce((a, e) => {
+    a[e.Jc_Code] = ++a[e.Jc_Code] || 0;
+    return a;
+  }, {});
 
   // const findMissingSequence = async (data = [], field) => {
   //   if (field != "Jc_Code") {
@@ -356,34 +369,23 @@ const Main = () => {
   const handleAnalyzeData = () => {
     let missingData = [];
     let missingSequence = [];
-    //let duplicates = [];
-    gridData.map((el, index) => {
-      if (el.Jc_Code == null || el.Jc_Code == undefined || el.Jc_Code == "") {
-        missingData.push(el);
-      }
+    let duplicates = [];
+    // gridData.map((el, index) => {
+    //   if (el.Jc_Code == null || el.Jc_Code == undefined || el.Jc_Code == "") {
+    //     missingData.push(el);
+    //   }
 
-      let difference;
-      difference = (gridData[index + 1]?.Jc_Code || 0) - el.Jc_Code;
-      if (difference > 1) {
-        let r1 = el.Jc_Code + 1;
-        let r2 = el.Jc_Code + difference - 1;
-        let text =
-          r1 == r2
-            ? `${el.Jc_Code + 1} is missing`
-            : `${el.Jc_Code + 1} - ${el.Jc_Code + difference - 1} is missing`;
+    //   let difference;
+    //   difference = (gridData[index + 1]?.Jc_Code || 0) - el.Jc_Code;
+    //   if (difference > 1) {
+    //     let r1 = el.Jc_Code + 1;
+    //     let r2 = el.Jc_Code + difference - 1;
+    //     let text =
+    //       r1 == r2
+    //         ? `${el.Jc_Code + 1} is missing`
+    //         : `${el.Jc_Code + 1} - ${el.Jc_Code + difference - 1} is missing`;
 
-        missingSequence.push({ id: index, field: text });
-      }
-
-      // let duplicateValue = gridData.filter((i) => i.Jc_Code === el.Jc_Code);
-      // debugger;
-      // if (duplicateValue.length > 1) {
-      //   if (!duplicates.some((i) => i.Jc_Code == el.Jc_Code))
-      //     duplicates.push(...duplicateValue);
-      // }
-    });
-
-    getDuplicateRecords(gridData, 'Jc_Code');
+    getDuplicateRecords(gridData, "Jc_Code");
     setMissingJCCodeSequence(missingSequence);
     setUndefinedJCRecords(missingData);
   };
@@ -410,60 +412,78 @@ const Main = () => {
   //   setFilteredData(event.data);
   // };
 
-  console.log("missingSequence", missingJCCodeSequence);
-  console.log("undefinedJCRecords", undefinedJCRecords);
+  // const handleFileChange = (data) => {
+  //   setFiles(data);
+  //   uploadDocument(data);
+  // };
+
+  // const uploadDocument = (data) => {
+  //   post(data).then((res) => {
+  //     console.log("fileupload Response", res);
+  //   });
+  // };
+
+  const handleRemoveAllFiles = () => {
+    setFiles([]);
+  };
+
+  const handleRemoveFile = (file) => {
+    const uploadedFiles = files;
+    const filtered = uploadedFiles.filter((i) => i.name !== file.name);
+    setFiles([...filtered]);
+  };
 
   return (
     <>
-      <Grid>
-        {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
-        <label htmlFor="contained-button-file">
-          <Input
-            id="contained-button-file"
-            multiple
-            type="file"
-            onChange={onChange}
-          />
-          <Grid container spacing={2} className="issue-bar">
-            <Grid item xs={11}></Grid>
-            <Grid item xs={1}
-              style={{
-                marginTop: '5px',
-                paddingRight: '50px',
-                paddingLeft: '10px'
-                // padding: '10px'
-              }}>
-              <Button variant="contained" component="span">
-                Upload
-              </Button>
-            </Grid>
-          </Grid>
-          {/* <Grid container spacing={3} className="issue-bar">
-            <Grid item xs={4}></Grid>
-            <Grid item xs={4}>
-              <FormControl sx={{ width: "100%" }}>
-                <InputLabel id="demo-simple-select-label">Fields</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select-label"
-                  // value={field}
-                  // onChange={handleChange}
-                  autoWidth
-                  label="Fields"
-                >
-                  <MenuItem value=""><em>None</em></MenuItem>
-                  <MenuItem value={10}>Twenty</MenuItem>
-                  <MenuItem value={21}>Twenty one</MenuItem>
-                  <MenuItem value={22}>Twenty one and a half</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}></Grid>
-          </Grid> */}
-        </label>
+      {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
+      {/* <label htmlFor="contained-button-file">
+        <Input
+          accept="doc/*"
+          id="contained-button-file"
+          multiple
+          type="file"
+          onChange={onChange}
+        />
+        <Button variant="contained" component="span">
+          Upload
+        </Button>
+      </label> */}
+      <Card style={{ padding: "10px" }}>
         <Grid container spacing={2} className="issue-bar">
-          <Grid item xs={3} style={{ marginTop: '17px', paddingright: '10px' }}>
-            <CustomAcordion columns={columns} issues={issues} handleIssues={handleIssues} />
+          <Grid item xs={12}>
+            <Box sx={{ border: "inset", padding: "10px" }}>
+              <FileUploaderRestrictions
+                accept={fileTypes}
+                iconType="image"
+                onChange={handleFileChange}
+                files={files}
+                handleRemoveAllFiles={handleRemoveAllFiles}
+                handleRemoveFile={handleRemoveFile}
+                maxFiles={1}
+              />
+            </Box>
+          </Grid>
+          <Grid item xs={3}>
+            {/* <Button variant="outlined" onClick={handleAnalyzeData}>
+              Analyze
+            </Button> */}
+            <Card style={{ marginTop: "15px" }}>
+              <label>Issues</label>
+              <Divider />
+              <CardContent>
+                {issues
+                  .filter((i) => i.data.length > 0)
+                  .map((el, index) => (
+                    <div
+                      onClick={(e) => handleFilterData(el)}
+                      style={{ cursor: "pointer" }}
+                      key={index}
+                    >
+                      {el.headerName}
+                    </div>
+                  ))}
+              </CardContent>
+            </Card>
           </Grid>
           <Grid item xs={9}>
             {alert.isAlert ? (
@@ -479,7 +499,7 @@ const Main = () => {
             />
           </Grid>
         </Grid>
-      </Grid>
+      </Card>
     </>
   );
 };
