@@ -9,7 +9,7 @@ const CustomAcordion = ({ issues = [], columns = [], handleIssues }) => {
     const [selectedColumn, setColumn] = React.useState();
 
     const onAccordionClick = (item) => {
-        setColumn(item.field);
+        setColumn(item.field == selectedColumn ? "" : item.field)
     }
 
     return (

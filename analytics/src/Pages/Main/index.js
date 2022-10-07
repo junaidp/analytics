@@ -18,6 +18,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import FileUploaderRestrictions from "../../components/SingleFileUploader/FileUploaderRestrictions"
+import { columns, issues } from "./columns";
 
 const fileTypes = [".xlsx", ".csv"];
 
@@ -60,106 +61,9 @@ const Main = () => {
     });
   };
 
-  const columns = [
-    { field: "id", headerName: "Id", width: 90, typeId: "jcCode" },
-    { field: "jcCode", headerName: "JcCode", width: 90, typeId: "jcCode" },
-    { field: "date", headerName: "Date", width: 90, typeId: "date" },
-    {
-      field: "clDate",
-      headerName: "ClDate",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "type",
-      headerName: "Type",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "cusDescription",
-      headerName: "CusDescription",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "service",
-      headerName: "Service",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "amt",
-      headerName: "AMT",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "warAMT",
-      headerName: "WarAMT",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "taxAMT",
-      headerName: "TaxAMT",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "totAMT",
-      headerName: "TotAMT",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "day",
-      headerName: "Day",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "month1",
-      headerName: "Month1",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "month",
-      headerName: "Month",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "year",
-      headerName: "Year",
-      width: 90,
-      typeId: "jcCode",
-    },
-    {
-      field: "dt",
-      headerName: "Dt",
-      width: 90,
-      typeId: "jcCode",
-    },
-  ];
 
-  const issues = [
-    { id: 1, name: "Empty JC Codes", typeId: "jcCode" },
-    { id: 2, name: "Duplicate JC Codes", typeId: "jcCode" },
-    {
-      id: 3,
-      name: "Missing Sequence in JC Code",
-      typeId: "jcCode",
-    },
-    { id: 4, name: "Empty JC Codes", typeId: "date" },
-    { id: 5, name: "Duplicate JC Codes", typeId: "clDate" },
-    {
-      id: 6,
-      name: "Missing Sequence in JC Code",
-      typeId: "clDate",
-    },
-  ];
+
+
 
   // const fetchData = (data) => {
   //   setIsVisible(true);
@@ -435,18 +339,6 @@ const Main = () => {
 
   return (
     <>
-      {/* <label htmlFor="contained-button-file">
-        <Input
-          accept="doc/*"
-          id="contained-button-file"
-          multiple
-          type="file"
-          onChange={onChange}
-        />
-        <Button variant="contained" component="span">
-          Upload
-        </Button>
-      </label> */}
       <Card style={{ padding: "10px" }}>
         <Grid container spacing={2} className="issue-bar">
           <Grid item xs={12}>
@@ -464,29 +356,12 @@ const Main = () => {
             {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
 
           </Grid>
-          <Grid item xs={3}>
-            {/* <Button variant="outlined" onClick={handleAnalyzeData}>
-              Analyze
-            </Button> */}
-            {/* <Card style={{ marginTop: "15px" }}>
-              <label>Issues</label>
-              <Divider />
-              <CardContent>
-                {issues
-                  .filter((i) => i.data.length > 0)
-                  .map((el, index) => (
-                    <div
-                      onClick={(e) => handleFilterData(el)}
-                      style={{ cursor: "pointer" }}
-                      key={index}
-                    >
-                      {el.headerName}
-                    </div>
-                  ))}
-              </CardContent>
-
-            </Card> */}
-            <CustomAcordion columns={columns} issues={issues} handleIssues={handleIssues} />
+          <Grid item xs={3} mt={2}>
+            <CustomAcordion
+              columns={columns}
+              issues={issues}
+              handleIssues={handleIssues}
+            />
           </Grid>
           <Grid item xs={9}>
             {alert.isAlert ? (
