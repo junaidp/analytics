@@ -63,6 +63,20 @@ const Service = {
         })
             .then((res) =>
                 res.json())
+    },
+    filterMissingSequence: (data) => {
+        console.log("URL", URL);
+             const form = new FormData();
+        // form.append("id", data.id);
+        // form.append("name", data.name);
+        // form.append("typeId", data.typeId);
+        let url = URL + 'Api/Analytics/FilterMissingSequence';
+        return fetch(url, {
+            method: 'POST',
+            body: form
+        })
+            .then((res) => 
+                res.json())
     }
 }
 export default Service;

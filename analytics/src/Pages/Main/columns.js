@@ -82,6 +82,11 @@ export const columns = [
     },
 ];
 
+export const columns1 = [
+    { field: "id", headerName: "S No", width: 90 },
+    { field: "name", headerName: "Name", width: '100%' }
+];
+
 export const issues = [
     { id: 1, name: "Empty JC Codes", typeId: "jcCode" },
     { id: 2, name: "Duplicate JC Codes", typeId: "jcCode" },

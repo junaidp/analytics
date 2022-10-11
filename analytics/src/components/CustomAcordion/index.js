@@ -27,7 +27,7 @@ const CustomAcordion = ({ issues = [], columns = [], handleIssues }) => {
                         <AccordionDetails >
                             {issues.length > 0 &&
                                 issues?.filter(i => i.typeId == selectedColumn)?.map((el) => (
-                                    <Typography onClick={() => handleIssues(el)}>
+                                    <Typography onClick={() => handleIssues(el)} style={{ cursor: 'pointer' }}>
                                         {el.name}
                                     </Typography>
                                 ))

@@ -18,7 +18,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
 import FileUploaderRestrictions from "../../components/SingleFileUploader/FileUploaderRestrictions"
-import { columns, issues } from "./columns";
+import { columns, columns1, issues } from "./columns";
 
 const fileTypes = [".xlsx", ".csv"];
 
@@ -26,6 +26,7 @@ const Main = () => {
 
   //  const [columns, setColumns] = useState([]);
   const [newCoumns, setNewColumns] = useState([]);
+  const [filterId, setFilterId] = useState(1);
   const [gridData, setGridData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
@@ -38,7 +39,7 @@ const Main = () => {
     setDuplicatesPartsWithDifferentPrice,
   ] = useState([]);
   const [isGridShow, setIsGridShow] = useState(true);
-  const { get, uploadFile, filterData } = Service;
+  const { get, uploadFile, filterData, filterMissingSequence } = Service;
   const [alert, setAlert] = useState({
     isAlert: false,
     severity: "",
@@ -52,6 +53,7 @@ const Main = () => {
   }, []);
 
   const fetchData = (data) => {
+    setFilterId(1)
     setIsVisible(true);
     console.log("data", data);
     get(data).then((res) => {
@@ -140,6 +142,9 @@ const Main = () => {
   };
 
   const handleIssues = async (e) => {
+    setFilterId(e.id);
+    if (e.id == 3)
+      return handleFilterMissingSequence()
     filterIssues(e);
   };
 
@@ -150,9 +155,15 @@ const Main = () => {
       console.log("response", res);
       setGridData(res);
       setIsVisible(false);
-    });
-  };
+    })
+  }
 
+  const handleFilterMissingSequence = () => {
+    filterMissingSequence().then((res) => {
+      console.log("MissingSequence", res);
+      setGridData(res);
+    });
+  }
   // const filterHandleSubmit = (e) => {
   //   setAlert({ isAlert: false });
   //   setIsVisible(true);
@@ -372,7 +383,7 @@ const Main = () => {
             ) : null}
             <DataTableGrid
               gridData={gridData}
-              columns={columns}
+              columns={filterId == 3 ? columns1 : columns}
               isCheckbox={false}
             />
           </Grid>
