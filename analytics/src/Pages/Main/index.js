@@ -39,7 +39,7 @@ const Main = () => {
     setDuplicatesPartsWithDifferentPrice,
   ] = useState([]);
   const [isGridShow, setIsGridShow] = useState(true);
-  const { get, uploadFile, filterData, filterMissingSequence } = Service;
+  const { get, uploadFile, filterData, filterMissingSequence, deleteAllData } = Service;
   const [alert, setAlert] = useState({
     isAlert: false,
     severity: "",
@@ -78,7 +78,6 @@ const Main = () => {
   // }
 
   const handleFileChange = async (e) => {
-    debugger
     const [file] = e
     console.log("file", file);
     fileUpload(file);
@@ -105,6 +104,16 @@ const Main = () => {
       setIsVisible(false);
     });
   };
+
+  const deleteData = () => {
+    deleteAllData().then((res) => {
+      setGridData(res);
+    });
+  }
+
+  const resetFilter = (data) => {
+    fetchData();
+  }
 
   // const mapData = (data = []) => {
   //   let columns = [];
@@ -351,41 +360,51 @@ const Main = () => {
   return (
     <>
       <Card style={{ padding: "10px" }}>
-        <Grid container spacing={2} className="issue-bar">
-          <Grid item xs={12}>
-            <Box sx={{ border: "inset", padding: "10px" }}>
-              <FileUploaderRestrictions
-                accept={fileTypes}
-                iconType="image"
-                onChange={handleFileChange}
-                files={files}
-                handleRemoveAllFiles={handleRemoveAllFiles}
-                handleRemoveFile={handleRemoveFile}
-                maxFiles={1}
+        <Grid spacing={2} className="issue-bar">
+          <Grid xs={12} container spacing={2} sx={{ padding: 4 }}>
+            <Grid item xs={10}>
+              <Box sx={{ border: "inset" }}>
+                <FileUploaderRestrictions
+                  accept={fileTypes}
+                  iconType="image"
+                  onChange={handleFileChange}
+                  files={files}
+                  handleRemoveAllFiles={handleRemoveAllFiles}
+                  handleRemoveFile={handleRemoveFile}
+                  maxFiles={1}
+                />
+              </Box>
+              {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
+            </Grid>
+            <Grid item xs={2}>
+              <Button variant="contained" sx={{ width: "100%", marginBottom: "5px" }} onClick={() => deleteData()} >
+                Delete All Data
+              </Button>
+              <Button variant="contained" sx={{ width: "100%", marginBottom: "5px" }} onClick={() => resetFilter()}>
+                Reset Filters</Button>
+            </Grid>
+          </Grid>
+          <Grid xs={12} container spacing={2}>
+            <Grid item xs={3}>
+              <CustomAcordion
+                columns={columns}
+                issues={issues}
+                handleIssues={handleIssues}
               />
-            </Box>
-            {isVisible ? <LinearLoader isVisible={isVisible} /> : null}
-
-          </Grid>
-          <Grid item xs={3} mt={2}>
-            <CustomAcordion
-              columns={columns}
-              issues={issues}
-              handleIssues={handleIssues}
-            />
-          </Grid>
-          <Grid item xs={9}>
-            {alert.isAlert ? (
-              <BasicAlerts
-                severity={alert.severity}
-                text={alert.text}
-              ></BasicAlerts>
-            ) : null}
-            <DataTableGrid
-              gridData={gridData}
-              columns={filterId == 3 ? columns1 : columns}
-              isCheckbox={false}
-            />
+            </Grid>
+            <Grid item xs={9} >
+              {alert.isAlert ? (
+                <BasicAlerts
+                  severity={alert.severity}
+                  text={alert.text}
+                ></BasicAlerts>
+              ) : null}
+              <DataTableGrid
+                gridData={gridData}
+                columns={filterId == 3 ? columns1 : columns}
+                isCheckbox={false}
+              />
+            </Grid>
           </Grid>
         </Grid>
       </Card>

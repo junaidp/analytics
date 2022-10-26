@@ -1,6 +1,6 @@
 import AppConsts from "../appconst";
 
-//const URL = 'https://9979-213-196-213-232.ngrok.io/car?hsn=1679&tsn=214&vehicleType=PASSENGER_CAR&manufacture=volvo&fuelType=BENZIN&enginePowerRange=RANGE_0_TO_50KW&carType=LIMOUSINE&tradeName=trade&maxHits=1';
+
 const URL = AppConsts.appBaseUrl
 const Service = {
     get: (data) => {
@@ -66,7 +66,7 @@ const Service = {
     },
     filterMissingSequence: (data) => {
         console.log("URL", URL);
-             const form = new FormData();
+        const form = new FormData();
         // form.append("id", data.id);
         // form.append("name", data.name);
         // form.append("typeId", data.typeId);
@@ -75,7 +75,16 @@ const Service = {
             method: 'POST',
             body: form
         })
-            .then((res) => 
+            .then((res) =>
+                res.json())
+    },
+    deleteAllData: (data) => {
+        console.log("URL", URL);
+        let url = URL + 'Api/Analytics/Delete';
+        return fetch(url, {
+            method: 'DELETE'
+        })
+            .then((res) =>
                 res.json())
     }
 }
