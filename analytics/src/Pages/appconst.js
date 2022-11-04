@@ -13,6 +13,7 @@ const AppConsts = {
     encrptedAuthTokenName: 'enc_auth_token',
   },
   //appBaseUrl: env.BASE_URL
+  //appBaseUrl: "https://analyticsbackendapi.azurewebsites.net/"
   appBaseUrl: "https://localhost:7029/"
 };
 export default AppConsts;

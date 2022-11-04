@@ -1,4 +1,4 @@
-export const columns = [
+export const cols = [
     { field: "id", headerName: "Id", width: 90, typeId: "jcCode" },
     { field: "jcCode", headerName: "JcCode", width: 90, typeId: "jcCode" },
     { field: "date", headerName: "Date", width: 90, typeId: "date" },
