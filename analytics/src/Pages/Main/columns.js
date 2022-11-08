@@ -88,18 +88,18 @@ export const columns1 = [
 ];
 
 export const issues = [
-    { id: 1, name: "Empty JC Codes", typeId: "jcCode" },
-    { id: 2, name: "Duplicate JC Codes", typeId: "jcCode" },
+    { id: 1, name: "Empty", typeId: "jcCode" },
+    { id: 2, name: "Duplicate", typeId: "jcCode" },
     {
         id: 3,
-        name: "Missing Sequence in JC Code",
+        name: "Missing Sequence",
         typeId: "jcCode",
     },
-    { id: 4, name: "Empty JC Codes", typeId: "date" },
-    { id: 5, name: "Duplicate JC Codes", typeId: "clDate" },
+    { id: 4, name: "Empty", typeId: "date" },
+    { id: 5, name: "Duplicate", typeId: "clDate" },
     {
         id: 6,
-        name: "Missing Sequence in JC Code",
+        name: "Missing Sequence",
         typeId: "clDate",
     },
 ];

@@ -5,13 +5,8 @@ import LinearLoader from "../../components/Spinner";
 import DataTableGrid from "../../components/Grid";
 import BasicAlerts from "../../components/Alert";
 import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Service from "../Services";
 import CustomAcordion from "../../components/CustomAcordion";
-import {
-  replaceSpaceWithCharacter,
-  toTitleCase,
-} from "../../components/Helper";
 import { Box } from "@mui/material";
 import Card from "@mui/material/Card";
 import FileUploaderRestrictions from "../../components/SingleFileUploader/FileUploaderRestrictions"
@@ -21,11 +16,9 @@ import { cols, columns1, issues } from "./columns";
 const fileTypes = [".xlsx", ".csv"];
 const Main = () => {
   //  const [columns, setColumns] = useState([]);
-  const [newCoumns, setNewColumns] = useState([]);
   const [filterId, setFilterId] = useState(1);
   const [gridData, setGridData] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [isGridShow, setIsGridShow] = useState(true);
   const { get, uploadFile, filterData, filterMissingSequence, deleteAllData } = Service;
   const [alert, setAlert] = useState({
     isAlert: false,

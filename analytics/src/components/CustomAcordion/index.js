@@ -1,11 +1,11 @@
 import React from "react";
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from "@mui/material";
 import { GridExpandMoreIcon } from "@mui/x-data-grid";
+import { camelToTitleCase } from "../../Helper";
 
 const CustomAcordion = ({ issues = [], columns = [], handleIssues }) => {
     console.log("issues", issues);
     console.log("columns", columns);
-    const [expanded, setExpanded] = React.useState(false);
     const [selectedColumn, setColumn] = React.useState();
 
     const onAccordionClick = (item) => {
@@ -28,7 +28,7 @@ const CustomAcordion = ({ issues = [], columns = [], handleIssues }) => {
                             {issues.length > 0 &&
                                 issues?.filter(i => i.typeId == selectedColumn)?.map((el) => (
                                     <Typography onClick={() => handleIssues(el)} style={{ cursor: 'pointer' }}>
-                                        {el.name}
+                                        {`${el.name} ${camelToTitleCase(el.typeId)}`}
                                     </Typography>
                                 ))
                             }
